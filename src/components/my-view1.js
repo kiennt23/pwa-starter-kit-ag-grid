@@ -16,7 +16,7 @@ import 'ag-grid-webcomponent/src/agGrid';
 // These are the shared styles needed by this element.
 import { SharedStyles } from './shared-styles.js';
 import {AgGridStyles} from "../styles/ag-grid";
-import {AgThemeStyles} from "../styles/ag-theme-balham-dark";
+import {AgThemeStyles} from "../styles/ag-theme-balham";
 
 class MyView1 extends PageViewElement {
   render() {
@@ -33,7 +33,7 @@ class MyView1 extends PageViewElement {
           width: auto;
         }
       </style>
-      <ag-grid id="agGrid" class="ag-theme-balham-dark"></ag-grid>
+      <ag-grid id="agGrid" class="ag-theme-balham"></ag-grid>
     `;
   }
 
