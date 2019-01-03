@@ -1,20 +1,20 @@
 /**
-@license
-Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-*/
+ @license
+ Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
+ This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+ The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+ The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+ Code distributed by Google as part of the polymer project is also
+ subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+ */
 
-import { html } from '@polymer/lit-element';
-import { PageViewElement } from './page-view-element.js';
+import {html} from '@polymer/lit-element';
+import {PageViewElement} from './page-view-element.js';
 import 'ag-grid-enterprise/dist/ag-grid-enterprise';
 import 'ag-grid-webcomponent/src/agGrid';
 
 // These are the shared styles needed by this element.
-import { SharedStyles } from './shared-styles.js';
+import {SharedStyles} from './shared-styles.js';
 import {AgGridStyles} from "../styles/ag-grid";
 import {AgThemeStyles} from "../styles/ag-theme-balham";
 
@@ -38,15 +38,40 @@ class MyView1 extends PageViewElement {
   }
 
   firstUpdated(_changedProperties) {
-    let columnDefs = [{ headerName: 'Make', field: 'make' }, { headerName: 'Model', field: 'model' }, { headerName: 'Price', field: 'price' }]
-
-    const rowData = [
-      { make: 'Toyota', model: 'Celica', price: 35000 },
-      { make: 'Ford', model: 'Mondeo', price: 32000 },
-      { make: 'Porsche', model: 'Boxter', price: 72000 },
+    let columnDefs = [{headerName: 'Make', field: 'make'},
+      {headerName: 'Model', field: 'model'},
+      {
+        headerName: 'Manufacture Date',
+        field: 'manufactureDate',
+        filter: 'agDateColumnFilter',
+        filterParams: {
+          debounceMs: 1000
+        }
+      },
+      {headerName: 'Price', field: 'price'}
     ];
 
-    const agGrid = this.shadowRoot.getElementById('agGrid')
+    const rowData = [
+      {
+        make: 'Toyota',
+        model: 'Celica',
+        manufactureDate: '21/01/2007',
+        price: 35000
+      },
+      {
+        make: 'Ford',
+        model: 'Mondeo',
+        manufactureDate: '15/06/2008', price: 32000
+      },
+      {
+        make: 'Porsche',
+        model: 'Boxter',
+        manufactureDate: '31/07/2008',
+        price: 72000
+      },
+    ];
+
+    const agGrid = this.shadowRoot.getElementById('agGrid');
     const gridOptions = {
       columnDefs: columnDefs,
       rowData: rowData,
@@ -56,7 +81,7 @@ class MyView1 extends PageViewElement {
         gridOptions.api.sizeColumnsToFit()
       },
     };
-    agGrid.gridOptions = gridOptions
+    agGrid.gridOptions = gridOptions;
   }
 }
 
