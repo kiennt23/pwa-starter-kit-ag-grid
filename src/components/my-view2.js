@@ -8,72 +8,62 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { html } from '@polymer/lit-element';
-import { PageViewElement } from './page-view-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
-
+import {html} from '@polymer/lit-element';
+import {PageViewElement} from './page-view-element.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
+import 'google-maps-limited/google-maps-limited';
 // This element is connected to the Redux store.
-import { store } from '../store.js';
-
-// These are the actions needed by this element.
-import { increment, decrement } from '../actions/counter.js';
-
-// We are lazy loading its reducer.
-import counter from '../reducers/counter.js';
-store.addReducers({
-  counter
-});
+import {store} from '../store.js';
+// These are the shared styles needed by this element.
+import {SharedStyles} from './shared-styles.js';
 
 // These are the elements needed by this element.
-import './counter-element.js';
-
-// These are the shared styles needed by this element.
-import { SharedStyles } from './shared-styles.js';
 
 class MyView2 extends connect(store)(PageViewElement) {
+
+  constructor() {
+    super();
+    this.apiKey = "AIzaSyAIrIPQPwVdtQNvswXBSgV5UqtnksHYomc";
+    this.markers = [
+      {
+        position: {lat:41, lng:-112},
+        InfoWindowContent: "<h3>The Salt Lake City, UT Temple</h3>"
+      },
+      {
+        position: {lat:33, lng:-117},
+        InfoWindowContent: "<h3>The San Diego, CA Temple</h3>"
+      },
+      {
+        position: {lat:29, lng:-82},
+        InfoWindowContent: "<h3>The Orlando, FL Temple</h3>"
+      },
+      {
+        position: {lat:43, lng:-70},
+        InfoWindowContent: "<h3>The Cape Elizabeth, ME Temple</h3>"
+      }
+    ];
+  }
+
   render() {
     return html`
       ${SharedStyles}
-      <section>
-        <h2>Redux example: simple counter</h2>
-        <div class="circle">${this._value}</div>
-        <p>This page contains a reusable <code>&lt;counter-element&gt;</code>. The
-        element is not built in a Redux-y way (you can think of it as being a
-        third-party element you got from someone else), but this page is connected to the
-        Redux store. When the element updates its counter, this page updates the values
-        in the Redux store, and you can see the current value of the counter reflected in
-        the bubble above.</p>
-        <br><br>
-      </section>
-      <section>
-        <p>
-          <counter-element value="${this._value}" clicks="${this._clicks}"
-              @counter-incremented="${this._counterIncremented}"
-              @counter-decremented="${this._counterDecremented}">
-          </counter-element>
-        </p>
-      </section>
+      <google-maps-limited style="height:65vh;width:80vw"
+        .apiKey="${this.apiKey}"
+        .markers="${this.markers}"
+      ></google-maps-limited>
     `;
   }
 
-  static get properties() { return {
-    // This is the data from the store.
-    _clicks: { type: Number },
-    _value: { type: Number },
-  }}
-
-  _counterIncremented() {
-    store.dispatch(increment());
-  }
-
-  _counterDecremented() {
-    store.dispatch(decrement());
+  static get properties() {
+    return {
+      apiKey: {type: String},
+      markers: {type: Array}
+    }
   }
 
   // This is called every time something is updated in the store.
   stateChanged(state) {
-    this._clicks = state.counter.clicks;
-    this._value = state.counter.value;
+
   }
 }
 
