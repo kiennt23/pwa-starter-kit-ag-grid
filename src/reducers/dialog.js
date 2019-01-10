@@ -8,7 +8,7 @@
  subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-import {OPEN_DIALOG} from "../actions/dialog";
+import {OPEN_DIALOG, CLOSE_DIALOG} from "../actions/dialog";
 
 const INITIAL_STATE = {
   page: '',
@@ -22,7 +22,14 @@ const dialog = (state = INITIAL_STATE, action) => {
     case OPEN_DIALOG:
       return {
         ...state,
-        dialogOpened: true
+        dialogOpened: true,
+        dialogData: action.dialogData
+      };
+    case CLOSE_DIALOG:
+      return {
+        ...state,
+        dialogOpened: false,
+        dialogData: null
       };
     default:
       return state;

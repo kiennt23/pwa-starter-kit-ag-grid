@@ -19,7 +19,7 @@ import {SharedStyles} from './shared-styles.js';
 import {AgGridStyles} from '../styles/ag-grid';
 import {AgThemeStyles} from '../styles/ag-theme-balham';
 
-import {openDialog} from '../actions/dialog';
+import {openDialog, closeDialog} from '../actions/dialog';
 import dialog from '../reducers/dialog';
 import {connect} from "pwa-helpers";
 
@@ -31,7 +31,8 @@ class MyView1 extends connect(store)(PageViewElement) {
 
   static get properties() {
     return {
-      dialogOpened: {type: Boolean}
+      dialogOpened: {type: Boolean},
+      dialogData: {type: Object}
     };
   }
 
@@ -55,12 +56,14 @@ class MyView1 extends connect(store)(PageViewElement) {
   }
 
   renderDialog() {
-    if (this.dialogOpened) {
+    if (this.dialogOpened && this.dialogData) {
       return html`
-        <vaadin-dialog opened>
+        <vaadin-dialog opened @opened-changed="${(e) => this.openChanged(e)}">
           <template>
-            <div>This simple dialog will close by pressing the Esc key,</div>
-            <div> or by a mouse click anywhere outside the dialog area</div>
+            <div>Make: ${this.dialogData.make}</div>
+            <div>Model: ${this.dialogData.model}</div>
+            <div>Manufacture Date: ${this.dialogData.manufactureDate}</div>
+            <div>Price: ${this.dialogData.price}</div>
           </template>
         </vaadin-dialog>
       `;
@@ -119,12 +122,19 @@ class MyView1 extends connect(store)(PageViewElement) {
   }
 
   openDialog(event) {
-    store.dispatch(openDialog());
+    store.dispatch(openDialog({dialogData: event.data}));
+  }
+
+  openChanged(event) {
+    if (!event.detail.value) {
+      store.dispatch(closeDialog())
+    }
   }
 
   stateChanged(state) {
-    let {dialogOpened} = state.dialog || {};
+    let {dialogOpened, dialogData} = state.dialog || {};
     this.dialogOpened = dialogOpened;
+    this.dialogData = dialogData;
   }
 }
 
