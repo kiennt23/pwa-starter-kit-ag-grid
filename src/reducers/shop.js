@@ -118,7 +118,7 @@ export default shop;
 //
 // The _selectors_ below transform store data into specific forms that
 // are tailored for presentation. Putting this logic here keeps the
-// layers of our app loosely coupled and easier to maintain, since
+// layers of our dialog loosely coupled and easier to maintain, since
 // views don't need to know about the store's internal data structures.
 //
 // We use a tiny library called `reselect` to create efficient

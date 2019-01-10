@@ -83,3 +83,4 @@ export const updateDrawerState = (opened) => {
     opened
   };
 };
+

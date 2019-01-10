@@ -9,11 +9,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import {
-  UPDATE_PAGE,
-  UPDATE_OFFLINE,
-  OPEN_SNACKBAR,
   CLOSE_SNACKBAR,
-  UPDATE_DRAWER_STATE
+  OPEN_SNACKBAR,
+  UPDATE_DRAWER_STATE,
+  UPDATE_OFFLINE,
+  UPDATE_PAGE
 } from '../actions/app.js';
 
 const INITIAL_STATE = {

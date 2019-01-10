@@ -12,13 +12,29 @@ import {html} from '@polymer/lit-element';
 import {PageViewElement} from './page-view-element.js';
 import 'ag-grid-enterprise/dist/ag-grid-enterprise';
 import 'ag-grid-webcomponent/src/agGrid';
-
+import '@vaadin/vaadin-dialog/vaadin-dialog';
+import {store} from '../store';
 // These are the shared styles needed by this element.
 import {SharedStyles} from './shared-styles.js';
-import {AgGridStyles} from "../styles/ag-grid";
-import {AgThemeStyles} from "../styles/ag-theme-balham";
+import {AgGridStyles} from '../styles/ag-grid';
+import {AgThemeStyles} from '../styles/ag-theme-balham';
 
-class MyView1 extends PageViewElement {
+import {openDialog} from '../actions/dialog';
+import dialog from '../reducers/dialog';
+import {connect} from "pwa-helpers";
+
+store.addReducers({
+  dialog
+});
+
+class MyView1 extends connect(store)(PageViewElement) {
+
+  static get properties() {
+    return {
+      dialogOpened: {type: Boolean}
+    };
+  }
+
   render() {
     return html`
       ${SharedStyles}
@@ -34,7 +50,23 @@ class MyView1 extends PageViewElement {
         }
       </style>
       <ag-grid id="agGrid" class="ag-theme-balham"></ag-grid>
+      ${this.renderDialog()}
     `;
+  }
+
+  renderDialog() {
+    if (this.dialogOpened) {
+      return html`
+        <vaadin-dialog opened>
+          <template>
+            <div>This simple dialog will close by pressing the Esc key,</div>
+            <div> or by a mouse click anywhere outside the dialog area</div>
+          </template>
+        </vaadin-dialog>
+      `;
+    } else {
+      return html``;
+    }
   }
 
   firstUpdated(_changedProperties) {
@@ -77,11 +109,22 @@ class MyView1 extends PageViewElement {
       rowData: rowData,
       enableFilter: true,
       floatingFilter: true,
+      suppressRowClickSelection: true,
       onGridReady: () => {
         gridOptions.api.sizeColumnsToFit()
       },
+      onRowClicked: (event) => this.openDialog(event)
     };
     agGrid.gridOptions = gridOptions;
+  }
+
+  openDialog(event) {
+    store.dispatch(openDialog());
+  }
+
+  stateChanged(state) {
+    let {dialogOpened} = state.dialog || {};
+    this.dialogOpened = dialogOpened;
   }
 }
 
